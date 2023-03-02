@@ -12,7 +12,7 @@ end_q = 10 # last one. total of 107 possible questions
 SLEEP_TIME = 20  # time to sleep in seconds after a request. Should help with rate limiting.
 OUTPUT_DIR = "html"  # needs to already exist. don't put trailing /
 ALTERNATE_VERSIONS = 0  # number addl' of times to call the api. 0 is default.
-FILE_PREFIX = "example_WSC_Q"  # is prefixed before the questions number, produces files like ex: WSC_Q2_v0.html
+FILE_PREFIX = "WSC_Q"  # is prefixed before the questions number, produces files like ex: WSC_Q2_v0.html
 GPT_MODEL = "gpt-3.5-turbo-0301"  # https://platform.openai.com/docs/api-reference/chat/create#chat/create-model
 
 
