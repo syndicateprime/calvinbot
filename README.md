@@ -9,15 +9,15 @@ ChatGPT has a degree of randomness, so while the sources are similar, the output
 ## Examples
 To see examples of it's output, see the `html` directory, the files that begin with `example_` are the ones provided. 
 
-Here are quick links to the outputs.
+Here are quick links to the example outputs.
 1. [What is the chief end of man?](html/example_WSC_Q_1_v0.html)
-1. [What rule hath God given to direct us how we may glorify and enjoy Him? ](html/example_WSC_Q_2_v0.html)
+1. [What rule has God given to direct us how we may glorify and enjoy Him? ](html/example_WSC_Q_2_v0.html)
 1. [What do the Scriptures principally teach?](html/example_WSC_Q_3_v0.html)
 1. [What is God](html/example_WSC_Q_4_v0.html)
 1. [Are there more Gods than one?](html/example_WSC_Q_5_v0.html)
 1. [How many persons are there in the Godhead?](html/example_WSC_Q_6_v0.html)
 1. [What are the decrees of God? ](html/example_WSC_Q_7_v0.html)
-1. [How doth God execute His decrees? ](html/example_WSC_Q_8_v0.html)
+1. [How does God execute His decrees? ](html/example_WSC_Q_8_v0.html)
 1. [What is the work of creation?](html/example_WSC_Q_9_v0.html)
 1. [How did God create man?](html/example_WSC_Q_10_v0.html)
 
