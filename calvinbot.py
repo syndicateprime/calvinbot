@@ -4,20 +4,138 @@ import time
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# INPUT PARMS (modify these)
+# INPUT PARAMS (modify these)
 start_q = 1 # first question to generate
 end_q = 10 # last one. total of 107 possible questions
+
+# TUNING PARAMS 
+ALTERNATE_VERSIONS = 0  # number addl' of times to call the api. 0 is default.
+VERBOSITY = "75%" # Increases verbosity of default responses. Default is "75%"
 
 # GPT PARAMETERS (Careful with these!)
 SLEEP_TIME = 20  # time to sleep in seconds after a request. Should help with rate limiting.
 OUTPUT_DIR = "html"  # needs to already exist. don't put trailing /
-ALTERNATE_VERSIONS = 0  # number addl' of times to call the api. 0 is default.
 FILE_PREFIX = "WSC_Q"  # is prefixed before the questions number, produces files like ex: WSC_Q2_v0.html
 GPT_MODEL = "gpt-3.5-turbo-0301"  # https://platform.openai.com/docs/api-reference/chat/create#chat/create-model
 
+# I made this dict by asking chatgpt to make the list. 
+# I asked it to use modern English.
+# The ones after question 40 are probably wrong.
+questions = {
+    1: "What is the main purpose of man?",
+    2: "What rule has God given to us to direct us how to glorify and enjoy him?",
+    3: "What do the Scriptures mainly teach?",
+    4: "What is God?",
+    5: "Are there more Gods than one?",
+    6: "How many persons are there in the Godhead?",
+    7: "What are the decrees of God?",
+    8: "How does God execute his decrees?",
+    9: "What is the work of creation?",
+    10: "How did God create man?",
+    11: "What are God's works of providence?",
+    12: "What did God's providence do for man whom He created?",
+    13: "Did our first parents remain as they were created?",
+    14: "What is sin?",
+    15: "By what sin did our first parents fall from their original state?",
+    16: "Did all mankind fall in Adam’s first transgression?",
+    17: "Into what state did the fall bring mankind?",
+    18: "What is the sinfulness of that estate into which man fell?",
+    19: "What is the misery of that estate into which man fell?",
+    20: "Did God leave all mankind to perish in the estate of sin and misery",
+    21: "Who is the Redeemer of God’s elect?",
+    22: "How did Christ, being the Son of God, become man?",
+    23: "What offices does Christ execute as our Redeemer?",
+    24: "How does Christ execute the office of a prophet?",
+    25: "How does Christ execute the office of a priest?",
+    26: "How does Christ execute the office of a king?",
+    27: "What did Christ's humiliation consist of?",
+    28: "What does Christ's exaltation consist of?",
+    29: "How are we made partakers of the redemption purchased by Christ?",
+    30: "How does the Spirit apply to us the redemption purchased by Christ?",
+    31: "What is effectual calling?",
+    32: "What benefits do they that are effectually called partake of in this life?",
+    33: "What is justification?",
+    34: "What is adoption?",
+    35: "What is sanctification?",
+    36: "What are the benefits which in this life do accompany or flow from justification, adoption, and sanctification?",
+    37: "What benefits do believers receive from Christ at death?",
+    38: "What benefits do believers receive from Christ at the resurrection?",
+    39: "What is the duty which God requires of man?",
+    40: "What did God at first reveal to man as the rule of his obedience?",
+    41: "Where is the moral law comprehensively summarized?",
+    42: "What is the sum of the ten commandments?",
+    43: "What is the preface to the ten commandments?",
+    44: "What is the second petition?",
+    45: "What is the third petition?",
+    46: "What is the fourth petition?",
+    47: "What is the fifth petition?",
+    48: "What is the sixth petition?",
+    49: "What is the seventh petition?",
+    50: "What is the conclusion to the Lord's Prayer?",
+    51: "What is the sacrament?",
+    52: "What are the sacraments of the New Testament?",
+    53: "What is baptism?",
+    54: "What is required for someone to be baptized?",
+    55: "What is the Lord's Supper?",
+    56: "What is required to receive the Lord's Supper?",
+    57: "What is the duty ofa Christian after receiving the Lord's Supper?",
+    58: "What is the significance of the Lord's Supper?",
+    59: "Who are to be excommunicated from the church?",
+    60: "What is forbidden in the fifth commandment?",
+    61: "What is required in the fifth commandment?",
+    62: "What is the reason annexed to the fifth commandment?",
+    63: "What is forbidden in the sixth commandment?",
+    64: "What is required in the sixth commandment?",
+    65: "What is forbidden in the seventh commandment?",
+    66: "What is required in the seventh commandment?",
+    67: "What is forbidden in the eighth commandment?",
+    68: "What is required in the eighth commandment?",
+    69: "What is forbidden in the ninth commandment?",
+    70: "What is required in the ninth commandment?",
+    71: "What is forbidden in the tenth commandment?",
+    72: "What is required in the tenth commandment?",
+    73: "What is the seventh commandment?",
+    74: "What does the seventh commandment teach us?",
+    75: "What is the eighth commandment?",
+    76: "What does the eighth commandment teach us?",
+    77: "What is the ninth commandment?",
+    78: "What does the ninth commandment teach us?",
+    79: "What is the tenth commandment?",
+    80: "What does the tenth commandment teach us?",
+    81: "Can anyone obey the Ten Commandments perfectly?",
+    82: "What is the law of God stated in the Ten Commandments sometimes called?",
+    83: "Are all people equally unable to keep the law of God?",
+    84: "What does every sin deserve?",
+    85: "What is sin?",
+    86: "What is forbidden in the first commandment?",
+    87: "What is required in the first commandment?",
+    88: "What is forbidden in the second commandment?",
+    89: "What is required in the second commandment?",
+    90: "What is the third commandment?",
+    91: "What is forbidden in the third commandment?",
+    92: "What is required in the third commandment?",
+    93: "What is the fourth commandment?",
+    94: "What does the fourth commandment teach us?",
+    95: "How is the Sabbath to be sanctified?",
+    96: "What is forbidden in the fourth commandment?",
+    97: "What are the reasons annexed to the fourth commandment?",
+    98: "What is prayer?",
+    99: "What rule has God given us for our prayer?",
+    100: "What does the preface to the Lord's Prayer teach us?",
+    101: "What do we pray for in the first petition?",
+    102: "What do we pray for in the second petition?",
+    103: "What do we pray for in the third petition?",
+    104: "What do we pray for in the fourth petition?",
+    105: "What do we pray for in the fifth petition?",
+    106: "What do we pray for in the sixth petition?",
+    107: "What does the conclusion to the Lord's Prayer teach us?"
+}
 
-def create_prompt(q_num):
+def create_prompt(q_num, questions=questions, verbosity=VERBOSITY):
     """Create an informational page for the WSC question number provided. It still gets it wrong a lot."""
+    question = ""
+    if q_num in questions:
+        question = questions[q_num]
     messages = [
         {
             "role": "system",
@@ -59,7 +177,7 @@ def create_prompt(q_num):
         },
         {
             "role": "user",
-            "content": f"That is perfect, so useful! Please produce a similar output for the question number {q_num} in the Shorter Catechism. Increase your verbosity and complexity by about 75%. Include plenty of Bible verses. Format the output in the style of an informational and educational site like wikipedia. Take your time when crafting the page.",
+            "content": f"That is perfect, so useful! Please produce a similar output for the question number {q_num}, which is \"{question}\" in the Shorter Catechism. Increase your verbosity and complexity by about {verbosity}. Include plenty of Bible verses. Format the output in the style of an informational and educational site like wikipedia. Take your time when crafting the page.",
         },
     ]
 
